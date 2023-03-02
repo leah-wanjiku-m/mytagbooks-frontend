@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+ import React ,{useEffect,useState}from 'react';
+//import './App.css';
+import Navbar from"./Components/Navbar";
+import Books from"./Components/Books";
+import Favourites from './Components/Favourites';
+import Search from './Components/Search';
+import { Routes, Route } from "react-router-dom";
 
 function App() {
+  const [books, setBooks] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  useEffect(()=>{
+    fetch("/books")
+   .then((response)=>response.json())
+   .then((data)=>setBooks(data))
+// },[]);
+fetch('/favourites')
+.then(response => response.json())
+.then(data => setFavorites(data))
+.catch(error => console.log(error));
+}, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+      <Navbar/>
+      <Routes>
+    <Route path='/books' element={<Books books={books} favorites={favorites}/>}/>
+    <Route path='/search' element={<Search />}/>
+     <Route path='/favourites' element={<Favourites  books={books} favorites={favorites} />}/>
+      </Routes>
     </div>
-  );
+     );
+    
+   
 }
 
 export default App;
